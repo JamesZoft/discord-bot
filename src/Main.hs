@@ -1,21 +1,19 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
+{-# LANGUAGE OverloadedStrings #-}
 
-module Main where
+import Data.Maybe
 
-import Data.Text
-import Pipes
+import Network.URL
+import Pipes.Core
 
-import Network.Discord
 import Network.Discord.Types
+import Network.Discord.Gateway
+import Network.Discord.Rest
 
-reply :: Message -> Text -> Effect DiscordM ()
-reply Message{messageChannel=chan} cont = fetch' $ CreateMessage chan cont Nothing
+data LogClient = LClient
+instance Client LogClient where
+  getAuth _ = Bot "MzM4MDE2ODIyNTU5NTA2NDMz.DFPSQQ.sHzd9kjiUpQJ-yEyXVBMPuJU0YM"
 
 main :: IO ()
-main = runBot (Bot "TOKEN") $ do
-  with ReadyEvent $ \(Init v u _ _ _) ->
-    liftIO . putStrLn $ "Connected to gateway v" ++ show v ++ " as user " ++ show u
-
-  with MessageCreateEvent $ \msg@Message{..} -> do
-    when ("Ping" `isPrefixOf` messageContent && (not . userIsBot $ messageAuthor)) $
-      reply msg "Pong!"
+main = runWebsocket (fromJust $ importURL "wss://gateway.discord.gg") LClient $ do
+  fetch' (CreateMessage 188134500411244545 "Hello, World!" Nothing)
+  fetch' (CreateMessage 188134500411244545 "I'm running discord.hs!" Nothing)
