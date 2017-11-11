@@ -12,8 +12,8 @@ import Control.Monad.IO.Class
 import Data.Text
 
 instance DiscordAuth IO where
-  auth    = return $ Bot "MzM4MDE2ODIyNTU5NTA2NDMz.DFPSQQ.sHzd9kjiUpQJ-yEyXVBMPuJU0YM"
-  version = return "0.4.2"
+  auth    = return $ Bot "<insert_bot_key>"
+  version = return "0.2.2"
   runIO   = id
 
 data Command (a :: Symbol)
